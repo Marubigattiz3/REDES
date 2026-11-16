@@ -1,31 +1,15 @@
 <?php
 include 'conexion.php';
 
-echo "<h3>Resultado modificar usuario:</h3>";
+$id = $_POST['id_credencial'];
+$contrasena = $_POST['contrasena'];
 
-if(isset($_POST['id'])) {
-    $id = $_POST['id'];
-    $contrasena = $_POST['contrasena'];
- 
-    echo "Intentando modificar usuario con ID: $id<br>";
- 
-    $sql = "UPDATE Usuario SET Contraseña = '$contrasena' WHERE ID = '$id'";
- 
-    if (mysqli_query($conn, $sql)) {
-        if(mysqli_affected_rows($conn) > 0) {
-            echo " USUARIO MODIFICADO<br>";
-            echo "ID: $id<br>";
-            echo "Nueva contraseña: $contrasena<br>";
-        } else {
-            echo " No se encontró usuario con ID: $id<br>";
-        }
-    } else {
-        echo " FALLÓ: " . mysqli_error($conn) . "<br>";
-    }
-} else {
-        echo " No se recibió ID para modificar<br>";
-}
+// Actualiza solo la contraseña de la credencial cuyo ID fue enviado.
+$stmt = mysqli_prepare($conn, 'UPDATE credenciales SET password = ? WHERE id_credenciales = ?');
+mysqli_stmt_bind_param($stmt, 'si', $contrasena, $id);
+mysqli_stmt_execute($stmt);
 
+echo 'Usuario modificado correctamente.<br>';
 mysqli_close($conn);
 echo "<br><a href='index.html'>Volver</a>";
 ?>

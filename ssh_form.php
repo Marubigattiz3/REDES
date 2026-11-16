@@ -1,11 +1,12 @@
-?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+<?php
 include 'conexion.php';
 
-// Cargamos los usuarios de la tabla
-$sql = "SELECT id, usuario FROM usuarios";
+// Carga los usuarios y dispositivos disponibles para construir los selectores.
+$sql = 'SELECT id_credenciales, usuario FROM credenciales ORDER BY usuario';
 $result = mysqli_query($conn, $sql);
+
+$sqlSwitch = 'SELECT nombre, ip FROM `switch` ORDER BY nombre';
+$resultSwitch = mysqli_query($conn, $sqlSwitch);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -20,15 +21,25 @@ $result = mysqli_query($conn, $sql);
   <label for="usuario">Seleccione un usuario:</label>
   <select name="usuario" id="usuario" required>
     <option value="">-- Elegir usuario --</option>
-    <?php while($row = mysqli_fetch_assoc($result)): ?>
-      <option value="<?php echo htmlspecialchars($row['usuario']); ?>">
-        <?php echo htmlspecialchars($row['usuario']); ?>
-              </option>
+    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+      <option value="<?php echo htmlspecialchars($row['usuario'], ENT_QUOTES, 'UTF-8'); ?>">
+        <?php echo htmlspecialchars($row['usuario'], ENT_QUOTES, 'UTF-8'); ?>
+      </option>
+    <?php endwhile; ?>
+  </select><br><br>
+
+  <label for="dispositivo">Seleccione un dispositivo:</label>
+  <select name="dispositivo" id="dispositivo">
+    <option value="">-- Elegir dispositivo --</option>
+    <?php while ($switch = mysqli_fetch_assoc($resultSwitch)): ?>
+      <option value="<?php echo htmlspecialchars($switch['nombre'], ENT_QUOTES, 'UTF-8'); ?>">
+        <?php echo htmlspecialchars($switch['nombre'] . ' (' . $switch['ip'] . ')', ENT_QUOTES, 'UTF-8'); ?>
+      </option>
     <?php endwhile; ?>
   </select><br><br>
 
   <label>IP del dispositivo:</label>
-  <input type="text" name="ip" placeholder="192.168.2.30" required><br><br>
+  <input type="text" name="ip" placeholder="192.168.2.30"><br><br>
 
   <label>Comando a ejecutar:</label>
   <input type="text" name="comando" value="show running-config" required><br><br>
@@ -38,4 +49,8 @@ $result = mysqli_query($conn, $sql);
 
 </body>
 </html>
-<?php mysqli_close($conn); ?>
+<?php
+mysqli_free_result($result);
+mysqli_free_result($resultSwitch);
+mysqli_close($conn);
+?>

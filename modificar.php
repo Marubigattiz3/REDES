@@ -1,21 +1,15 @@
 <?php
-// Archivo: modificar.php
-// Modifica la contraseña de un usuario existente
-
 include 'conexion.php';
 
 $id = $_POST['id_credencial'];
 $contrasena = $_POST['contrasena'];
 
-$sql = "UPDATE credenciales SET contrasena = '$contrasena' WHERE id_credencial = $id";
+// Actualiza solo la contraseña de la credencial cuyo ID fue enviado.
+$stmt = mysqli_prepare($conn, 'UPDATE credenciales SET password = ? WHERE id_credenciales = ?');
+mysqli_stmt_bind_param($stmt, 'si', $contrasena, $id);
+mysqli_stmt_execute($stmt);
 
-
-if (mysqli_query($conn, $sql)) {
-    echo " Contraseña actualizada correctamente.<br>";
-} else {
-    echo " Error: " . mysqli_error($conn);
-}
-
+echo 'Contraseña actualizada correctamente.<br>';
 mysqli_close($conn);
 echo "<a href='index.html'>Volver</a>";
 ?>

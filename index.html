@@ -2,21 +2,22 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>ABM de Usuarios / Prueba semestra II </title>
+<title>Administración de credenciales</title>
 </head>
 <body>
+<!-- Formularios de administración de las credenciales de acceso. -->
 <h2>Alta de Usuario</h2>
-<form action="/Prueba2-2025/alta.php" method="POST">
+<form action="alta.php" method="POST">
   Usuario: <input type="text" name="usuario" required><br>
-  Contraseña: <input type="text" name="contrasena" required><br>
+  Contraseña: <input type="password" name="contrasena" required><br>
   <input type="submit" value="Agregar">
 </form>
 
 <hr>
 
 <h2>Baja de Usuario</h2>
-<form action="/Prueba2-2025/baja.php" method="POST">
-  Usuario a eliminar: <input type="text" name="usuario" required><br>
+<form action="baja.php" method="POST">
+  ID de credencial a eliminar: <input type="number" name="id_credencial" min="1" required><br>
   <input type="submit" value="Eliminar">
 </form>
 
@@ -24,8 +25,8 @@
 
 <h2>Modificación de Contraseña</h2>
 <form action="modificar.php" method="POST">
-  Usuario: <input type="text" name="usuario" required><br>
-  Nueva contraseña: <input type="text" name="contrasena" required><br>
+  ID de credencial: <input type="number" name="id_credencial" min="1" required><br>
+  Nueva contraseña: <input type="password" name="contrasena" required><br>
   <input type="submit" value="Modificar">
 </form>
 </body>

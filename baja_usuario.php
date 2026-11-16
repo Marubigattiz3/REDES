@@ -1,29 +1,14 @@
 <?php
 include 'conexion.php';
 
-echo "<h3>Resultado eliminar usuario:</h3>";
+$id = $_POST['id_credencial'];
 
-if(isset($_POST['id'])) {
-    $id = $_POST['id'];
- 
-    echo "Intentando eliminar usuario con ID: $id<br>";
- 
-    $sql = "DELETE FROM Usuario WHERE ID = '$id'";
- 
-    if (mysqli_query($conn, $sql)) {
-        if(mysqli_affected_rows($conn) > 0) {
-            echo " USUARIO ELIMINADO<br>";
-            echo "ID: $id<br>";
-        } else {
-            echo " No se encontró usuario con ID: $id<br>";
-        }
-    } else {
-        echo " FALLÓ: " . mysqli_error($conn) . "<br>";
-    }
-} else {
-    echo " No se recibió ID para eliminar<br>";
-}    
+// El ID se enlaza como entero para eliminar únicamente la credencial indicada.
+$stmt = mysqli_prepare($conn, 'DELETE FROM credenciales WHERE id_credenciales = ?');
+mysqli_stmt_bind_param($stmt, 'i', $id);
+mysqli_stmt_execute($stmt);
 
+echo 'Usuario eliminado correctamente.<br>';
 mysqli_close($conn);
 echo "<br><a href='index.html'>Volver</a>";
 ?>

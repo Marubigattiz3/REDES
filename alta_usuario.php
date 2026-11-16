@@ -1,28 +1,15 @@
 <?php
 include 'conexion.php';
 
-echo "<h3>Resultado agregar usuario:</h3>";
+$usuario = $_POST['usuario'];
+$contrasena = $_POST['contrasena'];
 
-if(isset($_POST['ip_switch'])) {
-    $ip_switch = $_POST['ip_switch'];
-    $usuario = $_POST['usuario'];
-    $contrasena = $_POST['contrasena'];
- 
-    echo "Intentando agregar usuario: $usuario al switch $ip_switch<br>";
- 
-    $sql = "INSERT INTO Usuario (IP_Switch, Usuario, Contraseña) VALUES ('$ip_switch', '$usuario', '$contrasena')";
- 
-    if (mysqli_query($conn, $sql)) {
-        echo " USUARIO AGREGADO<br>";
-        echo "Usuario: $usuario<br>";
-        echo "Switch: $ip_switch<br>";
-    } else {
-        echo " FALLÓ: " . mysqli_error($conn) . "<br>";
-    }
-} else {
-    echo " No se recibieron datos<br>";
-} 
+// La consulta preparada evita insertar los datos del formulario directamente en SQL.
+$stmt = mysqli_prepare($conn, 'INSERT INTO credenciales (usuario, password, fecha) VALUES (?, ?, CURDATE())');
+mysqli_stmt_bind_param($stmt, 'ss', $usuario, $contrasena);
+mysqli_stmt_execute($stmt);
 
+echo '<h3>Usuario agregado correctamente.</h3>';
 mysqli_close($conn);
 echo "<br><a href='index.html'>Volver</a>";
 ?>

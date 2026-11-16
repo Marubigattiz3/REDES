@@ -1,25 +1,15 @@
 <?php
-// Archivo: alta.php
-// Da de alta (agrega) un usuario nuevo
-
 include 'conexion.php';
 
-// Obtenemos los datos enviados desde el formulario
 $usuario = $_POST['usuario'];
-$contraseña = $_POST['contraseña'];
-$switch_id = $_POST['switch_id'];
+$contrasena = $_POST['contrasena'];
 
+// La consulta preparada evita insertar los datos del formulario directamente en SQL.
+$stmt = mysqli_prepare($conn, 'INSERT INTO credenciales (usuario, password, fecha) VALUES (?, ?, CURDATE())');
+mysqli_stmt_bind_param($stmt, 'ss', $usuario, $contrasena);
+mysqli_stmt_execute($stmt);
 
-
-
-// Insertamos en la tabla (contraseña en texto plano)
-$sql = "INSERT INTO usuarios (usuario, contraseña) VALUES ('$usuario', '$contraseña')";
-
-if ($conn->query($sql) === TRUE) {
-    echo " Usuario agregado correctamente.<br>";
-} else {
-    echo " Error: " .  $conn->error;
-
-$conn->close();
+echo 'Usuario agregado correctamente.<br>';
+mysqli_close($conn);
 echo "<a href='index.html'>Volver</a>";
 ?>
